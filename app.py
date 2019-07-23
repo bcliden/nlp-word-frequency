@@ -3,6 +3,7 @@ import requests
 import operator
 import re
 import nltk
+import json
 from flask import Flask, render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from collections import Counter, OrderedDict
@@ -67,16 +68,9 @@ def count_and_save_words(url):
         return {"error": errors}
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["GET"])
 def hello():
-    results = {}
-    if request.method == "POST":
-        url = request.form["url"]
-        if "http://" not in url[:7]:
-            url = "http://" + url
-        job = q.enqueue_call(func=count_and_save_words, args=(url,), result_ttl=5000)
-        print(job.get_id())
-    return render_template("index.html", results=results)
+    return render_template("index.html")
 
 
 @app.route("/results/<job_key>", methods=["GET"])
@@ -94,6 +88,19 @@ def get_results(job_key):
         return jsonify(dict(results))
     else:
         return "Nay!", 202
+
+
+@app.route("/start", methods=["POST"])
+def get_counts():
+    # get url
+    data = json.loads(request.data.decode())
+    url = data["url"]
+    if "http://" not in url[:7] and "https://" not in url[:8]:
+        url = "http://" + url
+    # start job
+    job = q.enqueue_call(func=count_and_save_words, args=(url,), result_ttl=5000)
+    # return created job id
+    return job.get_id()
 
 
 if __name__ == "__main__":
