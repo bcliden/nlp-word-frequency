@@ -13,8 +13,9 @@
         $scope.submitButtonText = "Submit";
         $scope.loading = false;
         $scope.urlerror = false;
+        $scope.wordcounts = null;
         $scope.getResults = function() {
-          $log.log("test");
+          // $log.log("test");
 
           // get the URL from the input
           var userInput = $scope.url;
@@ -23,7 +24,7 @@
           $http
             .post("/start", { url: userInput })
             .success(function(results) {
-              $log.log(results);
+              // $log.log(results);
               getWordCount(results);
               $scope.wordcounts = null;
               $scope.loading = true;
@@ -37,6 +38,16 @@
               $scope.urlerror = true;
             });
         };
+        $scope.showChart = function() {
+          if (!$scope.loading) {
+            if (
+              $scope.wordcounts &&
+              Object.keys($scope.wordcounts).length > 0
+            ) {
+              return true;
+            }
+          }
+        };
 
         function getWordCount(jobID) {
           var timeout = "";
@@ -49,7 +60,7 @@
                 if (status === 202) {
                   $log.log(data, status);
                 } else if (status === 200) {
-                  $log.log(data);
+                  // $log.log(data);
                   $scope.loading = false;
                   $scope.submitButtonText = "Submit";
                   $scope.wordcounts = sortObject(data);

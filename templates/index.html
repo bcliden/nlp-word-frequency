@@ -21,7 +21,7 @@
       }
     </style>
   </head>
-  <body ng-controller="WordcountController">
+  <body ng-controller="WordcountController" ng-cloak>
     <div class="container">
       <div class="row">
         <div class="col-sm-5 col-sm-offset-1">
@@ -46,7 +46,7 @@
             </button>
             {% endraw %}
           </form>
-          <div class="alert alert-danger" role="alert" ng-show="urlerror">
+          <div class="alert alert-danger" role="alert" ng-show="urlError">
             <span
               class="glyphicon glyphicon-exclamation-sign"
               aria-hidden="true"
@@ -87,7 +87,10 @@
           />
         </div>
       </div>
-      <word-count-chart data="wordcounts"></word-count-chart>
+      <word-count-chart
+        data="wordcounts"
+        ng-show="showChart()"
+      ></word-count-chart>
     </div>
     <br /><br />
     <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
