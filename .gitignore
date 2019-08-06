@@ -57,3 +57,5 @@ docs/_build/
 *.DS_Store
 
 .vscode
+.idea
+node_modules
