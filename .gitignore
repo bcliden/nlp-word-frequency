@@ -59,3 +59,4 @@ docs/_build/
 .vscode
 .idea
 node_modules
+.env
